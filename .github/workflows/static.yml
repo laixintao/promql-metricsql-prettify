@@ -31,6 +31,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-golang@v1
+
+      - name: build wasm
+        run: |
+          GOOS=js GOARCH=wasm go build -o main.wasm
+          cp "$(go env GOROOT)/misc/wasm/wasm_exec.js" .
+      
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
