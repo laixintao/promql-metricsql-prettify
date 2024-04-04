@@ -6,7 +6,7 @@ Make your PromQL or MetricsQL beautiful.
 
 - [Usage](#usage)
   - [Online Tools](#online-tools)
-  - [Commandline](#commandline)
+  - [Command-line](#command-line)
 - [Thanks](#thanks)
 
 <!-- vim-markdown-toc -->
@@ -19,14 +19,32 @@ https://laixintao.github.io/promql-metricsql-prettify/
 
 ![](./assets/promql-metricsql-prettify-online-demo.png)
 
-### Commandline
+### Command-line
 
 Installation:
 
 ```shell
-github.com/laixintao/promql-metricsql-prettify
+go install github.com/laixintao/promql-metricsql-prettify@latest
 ```
 
+Usage: pass your PromQL or MetricsQL into `promql-metricsql-prettify` as stdin:
+
+```shell
+$ echo 'count(sum(label_replace(node_uname_info, "kernel", "$1", "release", "([0-9]+.[0-9]+.[0-9]+).*")) by (kernel)) > 1' | promql-metricsql-prettify
+count(
+  sum(
+    label_replace(
+      node_uname_info,
+      "kernel",
+      "$1",
+      "release",
+      "([0-9]+.[0-9]+.[0-9]+).*"
+    )
+  ) by(kernel)
+)
+  >
+1
+```
 
 ## Thanks
 
