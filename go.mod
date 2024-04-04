@@ -1,4 +1,4 @@
-module github.com/laixintao/promql-prettify
+module github.com/laixintao/promql-metricsql-prettify
 
 go 1.21.4
 

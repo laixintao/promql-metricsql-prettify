@@ -21,6 +21,13 @@ https://laixintao.github.io/promql-metricsql-prettify/
 
 ### Commandline
 
+Installation:
+
+```shell
+github.com/laixintao/promql-metricsql-prettify
+```
+
+
 ## Thanks
 
 - This project was inspired by https://github.com/jiacai2050/promql-prettier
