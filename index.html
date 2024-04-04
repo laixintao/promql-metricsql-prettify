@@ -78,6 +78,10 @@
       color: red;
     }
 
+    .footer{
+      margin-top: 5rem;
+    }
+
 </style>
 	</head>
 	<body>
@@ -133,7 +137,7 @@
       <div className="output-div interactive-block">
       <div className="result-hint">
         <p>Identical prettier result will show here:</p>
-        <button className="copy-button" onClick={copyOutput} disable={copied}>{copied? "✅ COPIED!":"COPY"}</button>
+        <button className="copy-button" onClick={copyOutput}>{copied? "✅ COPIED!":"COPY"}</button>
       </div>
         {!isError &&
         <pre className="code-pre">{prettierOutput}</pre>
@@ -145,6 +149,12 @@
         </div>
         }
       </div>
+      </div>
+
+      <div className="footer">
+        <ul>
+          <li>Source code on Github: <a href="https://github.com/laixintao/promql-metricsql-prettify">https://github.com/laixintao/promql-metricsql-prettify</a></li>
+        </ul>
       </div>
     </div>;
   }
