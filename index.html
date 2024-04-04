@@ -1,0 +1,160 @@
+<html>
+	<head>
+		<meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>PromQL and MetricsQL Online Prettier</title>
+		<script src="wasm_exec.js"></script>
+<style>
+
+.main-body{
+  font-family: monospace;
+}
+.main-header {
+  padding: 20px;
+  text-align: center;
+  background: #764abc;
+  color: #f8f9fb;
+  font-size: 30px;
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 700;
+  border-radius: 12px;
+}
+.interactive-area {
+  display: flex;
+}
+
+.interactive-block {
+  height: 60vh;
+  width: 45vw;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.input-textarea{
+  width: 100%;
+  min-height: 100%;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+  white-space: pre;
+  font-size: 16px;
+}
+
+.code-pre {
+  max-width: 100%;
+  min-width: 100px;
+  min-height: 100%;
+  box-sizing: border-box;
+  display: block;
+  background: #1b1b1b;
+  color: #fc9463;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: scroll;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+  scrollbar-color: #666 #201c29;
+  white-space: pre;
+  font-size: 16px;
+  line-height: 1.75;
+  padding: 10px 20px 10px 22px;
+  margin: 0;
+}
+
+  
+    .result-hint{
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .copy-button{
+      height: 24px;
+    }
+
+    .error-pre {
+      text-wrap: unset;
+    }
+
+
+    .error-block{
+      color: red;
+    }
+
+</style>
+	</head>
+	<body>
+
+<div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+
+    <script type="text/babel">
+			const go = new Go();
+
+  function App() {
+    const [rawInput, setRawInput] = React.useState("");
+    const [prettierOutput, setPrettierOutput] = React.useState("");
+    const [isError, setisError] = React.useState(false);
+    const [copied, setCopied] = React.useState(false);
+
+    const handleRawInputChange = e => {
+      const input = e.target.value;
+      setRawInput(input);
+      const [output,error] = prettier(input);
+      console.log("output: ", output)
+      console.log("error: ", isError)
+
+      if (error != null && error.length > 0){
+        setisError(true);
+        setPrettierOutput(error);
+      }else{
+        setisError(false);
+        setPrettierOutput(output);
+      }
+
+      setCopied(false);
+
+    }
+
+    const copyOutput = () => {
+      navigator.clipboard.writeText(prettierOutput)
+      setCopied(true);
+    }
+
+    return <div className="main-body">
+      <h1 className="main-header">PromQL Online Prettier</h1>
+      <div className="interactive-area">
+
+      <div className="input-div interactive-block">
+        <p>Paste your <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">PromQL</a> or <a href="https://docs.victoriametrics.com/metricsql/">MetricsQL</a> here:</p>
+        <textarea 
+          className="input-textarea"
+          value={rawInput} onChange={handleRawInputChange} />
+      </div>
+      <div className="output-div interactive-block">
+      <div className="result-hint">
+        <p>Identical prettier result will show here:</p>
+        <button className="copy-button" onClick={copyOutput} disable={copied}>{copied? "✅COPIED!":"COPY"}</button>
+      </div>
+        {!isError &&
+        <pre className="code-pre">{prettierOutput}</pre>
+        }
+        {isError &&
+        <div className="error-block">
+        <div>ERROR!</div>
+        <pre className="error-pre">{prettierOutput}</pre>
+        </div>
+        }
+      </div>
+      </div>
+    </div>;
+  }
+
+			WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+				go.run(result.instance);
+        const domNode = document.getElementById('root');
+        const root = ReactDOM.createRoot(domNode);
+        root.render(<App />);
+			});
+</script>
+  </body>
+</html>
