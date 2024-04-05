@@ -7,6 +7,7 @@ Make your PromQL or MetricsQL beautiful.
 - [Usage](#usage)
   - [Online Tools](#online-tools)
   - [Command-line](#command-line)
+  - [Use xbin.io (Without installation!)](#use-xbinio-without-installation)
 - [Thanks](#thanks)
 
 <!-- vim-markdown-toc -->
@@ -45,6 +46,41 @@ count(
   >
 1
 ```
+
+### Use xbin.io (Without installation!)
+
+[xbin.io](https://xbin.io/) is a collection of cli tools, you can send your
+input via HTTP Request (cURL) to xbin.io, and xbin.io will run the command, then return
+output via HTTP Response. (You can think it as... serverless shell?)
+
+Use this tool on: https://xbin.io/w/tool/promql-metricsql-prettify
+
+Use it through cURL from terminal:
+
+```shell
+$ echo 'count(sum(label_replace(node_uname_info, "kernel", "$1", "release", "([0-9]+.[0-9]+.[0-9]+).*")) by (kernel)) > 1' | \
+    curl -X POST --data-binary @- https://xbin.io/promql-metricsql-prettify
+count(
+  sum(
+    label_replace(
+      node_uname_info,
+      "kernel",
+      "$1",
+      "release",
+      "([0-9]+.[0-9]+.[0-9]+).*"
+    )
+  ) by(kernel)
+)
+  >
+1
+```
+
+How does it work?
+
+1. `|` pip will send your PromQL into curl
+2. curl will send the conent to xbin.io/promql-metricsql-prettify
+3. xbin.io will run `promql-metricsql-prettify`
+4. You get the result from cURL
 
 ## Thanks
 
